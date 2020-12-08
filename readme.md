@@ -6,14 +6,19 @@ Install
 -------
 ### Install requirements
 ```bash
-sudo pip install
+pip install PyPDF2
 ```
 
 ### Install impo
 ```bash
-./setup.py
+python ./setup.py install
 ```
 
 Usage
 -----
+This package can be used as a command line utility or as a module. You can check the command line options with
+```bash
+impo -h
+```
 
+The module code is all in `impo/__init__.py` (with docstrings included).

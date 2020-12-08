@@ -1,7 +1,6 @@
 To do
 -----
-- Project description
-- Suggest k value
+- Improve documentation
 - Translations
-- cli
-    - add `--reverse` option
+- Suggest k value
+- add `reverse` option
