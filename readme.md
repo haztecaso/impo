@@ -1,14 +1,19 @@
 Impo
 =====
+Impo is a program for [impositioning](https://en.wikipedia.org/wiki/Imposition) documents.
 
-To do
+Install
+-------
+### Install requirements
+```bash
+sudo pip install
+```
+
+### Install impo
+```bash
+./setup.py
+```
+
+Usage
 -----
 
-- Project description
-- Suggest k value
-- Translations
-- interfaces
-
-    - cli
-    - tui
-    - gui

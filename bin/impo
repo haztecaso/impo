@@ -1,0 +1,52 @@
+#!/bin/env python3
+from impo import *
+import gettext 
+_ = gettext.gettext
+
+def choose_k(n):
+    for k in range(1,9):
+        pl = PageList(n,k)
+        s = "[%d] %d " % (k, pl.booklets)
+        s+= _("booklets of") + " %d " % k + _("pages each")
+        s+="\t(%d " % pl.blank + _("blank pages")+")"
+        print(s)
+    k = int(input(_("number of pages per booklet")+": "))
+    return k
+
+def str2doc(path):
+    try:
+        doc = Doc(path)
+        return doc
+    except Exception as e:
+        raise argparse.ArgumentTypeError(_("Error reading file"))
+
+def str2span(span):
+    try:
+        span = span.split("-")
+        span = (int(span[0]), int(span[1]))
+        return span
+    except Exception as e:
+        raise ValueError(_("Invalid span") + " (%s)" % e)
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description=_("impo is a program for impositioning documents"))
+    parser.add_argument("input", metavar="doc.pdf", help=_("input file"), type=str2doc)
+    parser.add_argument("-k", metavar="n", help=_("pages per booklet"), type=int)
+    parser.add_argument("-s", metavar="span", help=_("span of pages to include"), type=str2span)
+    parser.add_argument("-b", metavar="n", help=_("blank pages to insert before document"), type=int)
+    parser.add_argument("-v", help=_("verbosity"), action="store_true")
+    args = parser.parse_args()
+    doc = args.i
+    n = doc.n
+    if args.k is not None:
+        k = args.k
+        if k<1 or k > n // 4:
+            raise ValueError(_("Invalid k"))
+    else:
+        k = choose_k(n)
+    pl = PageList(n, k, args.b, args.s)
+    print(doc,pl)
+else:
+    print(_("bin/impo should be executed as a script"))
+
