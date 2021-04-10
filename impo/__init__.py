@@ -2,12 +2,14 @@ from math import ceil, log
 from os import path
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
-import gettext 
+import gettext
 _ = gettext.gettext
 
+a=a
+
 # Span utilities
-checkSpan = lambda span, n: span[0] > 0 and span[1] <= n
-spanSize = lambda span: span[1] - span[0] + 1
+def checkSpan(span, n): return span[0] > 0 and span[1] <= n
+def spanSize(span): return span[1] - span[0] + 1
 
 class PageList:
     """
@@ -38,23 +40,23 @@ class PageList:
             else:
                 raise IndexError(_("Span out of range"))
         else:
-            self.span = (1, n) # Default span
+            self.span = (1, n)  # Default span
             self.n = n
         self.k = k
         if b is None:
             b = 0
-        self.b = b%(self.k*4)
+        self.b = b % (self.k*4)
         self.booklets = ceil((self.n+self.b)/self.k/4)
         self.N = self.booklets*4*self.k
         self.pages = [-1]*self.b + \
-                [*range(self.span[0],self.span[1]+1)] + \
-                [-1]*(4*self.k*self.booklets-self.n)
+            [*range(self.span[0], self.span[1]+1)] + \
+            [-1]*(4*self.k*self.booklets-self.n)
         self.blank = self.b + 4*self.k*self.booklets - self.n
 
     def order(self) -> list:
         """Order indices for a booklet with 4*self.k pages."""
-        l = [*range(1,4*self.k+1)]
-        l = [l.pop(i%4//2-1)-1 for i in l*1]
+        l = [*range(1, 4*self.k+1)]
+        l = [l.pop(i % 4//2-1)-1 for i in l*1]
         result = []
         for i in range(self.booklets):
             result += [4*self.k*i + j for j in l]
@@ -63,23 +65,23 @@ class PageList:
     def orderedPages(self) -> list:
         """List page numbers in booklet order. Empty pages are represented with -1."""
         return [self.pages[i] for i in self.order()]
- 
+
     def __repr__(self):
         pages = self.orderedPages()
         result = ""
         for i in range(self.booklets * self.k):
-            p = [*map(lambda n: "()" if n<0 else n, pages[4*i:4*i+4])]
+            p = [*map(lambda n: "()" if n < 0 else n, pages[4*i:4*i+4])]
             result += "%s\t%s\t%s\t%s \n" % (p[0], p[1], p[2], p[3])
-            result += "\n" if (i>0 and (not (i+1)%self.k)) else ""
-        tabw = ceil(log(self.N,10))+1
+            result += "\n" if (i > 0 and (not (i+1) % self.k)) else ""
+        tabw = ceil(log(self.N, 10))+1
         return result.expandtabs(tabw)
 
     def __str__(self):
         result = _("_N_ booklets of _K_ pages each.")+"\n\n"
-        result = result.replace("_N_",str(self.booklets))
-        result = result.replace("_K_",str(self.k))
+        result = result.replace("_N_", str(self.booklets))
+        result = result.replace("_K_", str(self.k))
         if(self.booklets <= 2):
-            result +="Booklets:\n%s" % repr(self)
+            result += "Booklets:\n%s" % repr(self)
             return result
         lines = repr(self).splitlines()
         result += _("First booklet:")+"\n"
@@ -91,6 +93,7 @@ class PageList:
         for i in reversed(range(self.k)):
             result += "%s \n" % lines[-(i+2)]
         return result
+
 
 class Doc:
     def __init__(self, path):
@@ -128,7 +131,7 @@ class Doc:
                 page = self.input_pdf.getPage(i-1)
                 output_pdf.addPage(page)
 
-        outf = open("out.pdf", "wb+" )
+        outf = open("out.pdf", "wb+")
         output_pdf.write(outf)
         return output_pdf
 
@@ -137,4 +140,3 @@ class Doc:
         result += "%s " % self.n
         result += _("pages") + ")"
         return result
-
