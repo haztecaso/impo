@@ -5,8 +5,6 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 import gettext
 _ = gettext.gettext
 
-a=a
-
 # Span utilities
 def checkSpan(span, n): return span[0] > 0 and span[1] <= n
 def spanSize(span): return span[1] - span[0] + 1
