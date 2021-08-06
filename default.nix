@@ -1,8 +1,8 @@
 { pkgs, lib }:
 with pkgs.python38Packages;
 buildPythonPackage rec {
-  pname = "imposicion";
-  version = "0.0.1";
+  pname = "impo";
+  version = "2.1.0";
 
   src = ./.;
 
