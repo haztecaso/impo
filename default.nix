@@ -9,7 +9,7 @@ buildPythonPackage rec {
   propagatedBuildInputs = [ pypdf2 ];
 
   meta = with lib; {
-    homepage = "https://git.haztecaso.com/impo";
+    homepage = "https://github.com/haztecaso/impo";
     description = "Impo is a program for impositioning documents";
     license = licenses.gpl3;
   };
