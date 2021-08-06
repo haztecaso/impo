@@ -1,4 +1,5 @@
-{ lib, buildPythonPackage, fetchPypi, pypdf2 }:
+{ pkgs, lib }:
+with pkgs.python38Packages;
 buildPythonPackage rec {
   pname = "imposicion";
   version = "0.0.1";
