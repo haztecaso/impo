@@ -1,10 +1,12 @@
-#!/bin/env python3
-from impo import *
-import gettext
+from . import Doc, PageList
+import argparse, gettext
 _ = gettext.gettext
 
+from typing import Tuple
+from PyPDF2.utils import PdfReadError
 
-def choose_k(n):
+
+def choose_k(n:int) -> int:
     for k in range(1, 9):
         pl = PageList(n, k)
         s = "[%d] %d " % (k, pl.booklets)
@@ -15,29 +17,29 @@ def choose_k(n):
     return k
 
 
-def str2doc(path):
+def str2doc(path:str) -> Doc:
     try:
         doc = Doc(path)
         return doc
-    except Exception as e:
-        raise argparse.ArgumentTypeError(_("Error reading file"))
+    except PdfReadError as err:
+        raise argparse.ArgumentTypeError(f'_("Error reading file"): {err}')
 
 
-def str2span(span):
+def str2span(strspan:str) -> Tuple[int, int]:
     try:
-        span = span.split("-")
-        span = (int(span[0]), int(span[1]))
-        return span
-    except Exception as e:
-        raise ValueError(_("Invalid span") + " (%s)" % e)
+        span = strspan.split("-")
+        return (int(span[0]), int(span[1]))
+    except IndexError as e:
+        raise ValueError(f'{_("Invalid span")} ({e})')
 
-
-if __name__ == "__main__":
+def main():
     import argparse
     parser = argparse.ArgumentParser(description=_(
         "impo is a program for impositioning documents"))
-    parser.add_argument("input", metavar="doc.pdf",
+    parser.add_argument("input", metavar="in.pdf",
                         help=_("input file"), type=str2doc)
+    parser.add_argument("output", nargs="?", metavar="out.pdf",
+                        help=_("output file"), type=str)
     parser.add_argument("-k", metavar="n",
                         help=_("pages per booklet"), type=int)
     parser.add_argument("-s", metavar="span",
@@ -46,7 +48,7 @@ if __name__ == "__main__":
         "-b", metavar="n", help=_("blank pages to insert before document"), type=int)
     parser.add_argument("-v", help=_("verbosity"), action="store_true")
     args = parser.parse_args()
-    doc = args.i
+    doc = args.input
     n = doc.n
     if args.k is not None:
         k = args.k
@@ -56,5 +58,9 @@ if __name__ == "__main__":
         k = choose_k(n)
     pl = PageList(n, k, args.b, args.s)
     print(doc, pl)
-else:
-    print(_("bin/impo should be executed as a script"))
+    print(f"Saving output file to {args.output}")
+    doc.save(pl, args.output)
+    print("Done!")
+
+if __name__ == "__main__":
+    main()
