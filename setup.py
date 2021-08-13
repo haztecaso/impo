@@ -7,7 +7,7 @@ with open("readme.md", "r") as fh:
 
 setuptools.setup(
     name="impo-haztecaso", # Replace with your own username
-    version="2.1.0",
+    version="2.1.1",
     author="Adrián Lattes",
     author_email="adrianlattes@disroot.org",
     description="todo",

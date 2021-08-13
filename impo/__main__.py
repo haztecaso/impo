@@ -32,7 +32,7 @@ def choose_k(n:int) -> int:
 
 
 def main():
-    args = docopt(__doc__, version="impo v2.1.0")
+    args = docopt(__doc__, version="impo v2.1.1")
     print(args)
     return
     doc = Doc(args['<input_file>'])

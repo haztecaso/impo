@@ -2,7 +2,7 @@
 with pkgs.python38Packages;
 buildPythonPackage rec {
   pname = "impo";
-  version = "2.1.0";
+  version = "2.1.1";
 
   src = ./.;
 
