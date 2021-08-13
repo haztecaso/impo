@@ -1,10 +1,11 @@
-from typing import Tuple
+from gettext import gettext as _
 from os import path
+from typing import Tuple
+
 from PyPDF2 import PdfFileReader, PdfFileWriter
+
 from .pagelist import PageList
 
-import gettext
-_ = gettext.gettext
 
 class Doc:
     def __init__(self, ipath:str):
@@ -14,7 +15,6 @@ class Doc:
         self.n = self.input_pdf.getNumPages()
         self.__avg_page_size = None
 
-    
     @property
     def avg_page_size(self) -> Tuple[int, int]:
         """Average page size"""
@@ -27,7 +27,7 @@ class Doc:
             w /= self.n
             h /= self.n
             self.__avg_page_size = (w, h)
-        return self.__avg_page_size 
+        return self.__avg_page_size
 
     def arrange(self, pl:PageList) -> PdfFileWriter:
         """Generates rearranged PdfFileWriter given a PageList object"""
@@ -43,7 +43,8 @@ class Doc:
     def output_file(self, pl:PageList, filename:str=None) -> str:
         """Generates output filename"""
         if not filename:
-            filename = f"{self.name}-impo-k{pl.k}.pdf"
+            filename = f"{self.name}-impo-k{pl.k}.pdf" if pl.b == 0\
+                  else f"{self.name}-impo-k{pl.k}b{pl.b}.pdf"
         return filename
 
     def save(self, pl:PageList, output_path:str=None) -> None:

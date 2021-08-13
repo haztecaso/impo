@@ -1,12 +1,13 @@
 from math import ceil, log
-from typing import Tuple
+from gettext import gettext as _
+from typing import List
 
-import gettext
-_ = gettext.gettext
+from .span import Span
 
-# Span utilities
-def check_span(span, n): return span[0] > 0 and span[1] <= n
-def spanSize(span): return span[1] - span[0] + 1
+def booklet_order(k:int) -> List[int]:
+    l = [*range(1, 4*k+1)]
+    return [l.pop(i % 4//2-1)-1 for i in l*1]
+
 
 class PageList:
     """
@@ -22,22 +23,20 @@ class PageList:
         blank       total number of blank pages (before and after)
     """
 
-    def __init__(self, n:int, k:int=4, b:int=0, span:Tuple[int, int]=None):
+    def __init__(self, n:int, k:int=4, b:int=0, span:Span=None):
         """
         Constructor arguments:
             n       number of document pages
             k       number of paper pages per booklet
             b       number of blank pages to insert before document
-            span    span of pages to include   
+            span    span of pages to include
         """
         if span:
-            if check_span(span, n):
-                self.span = span
-                self.n = spanSize(span)
-            else:
-                raise IndexError(_("Span out of range"))
+            span.validate(n)
+            self.span = span
+            self.n = self.span.size
         else:
-            self.span = (1, n)  # Default span
+            self.span = Span(1, n)  # Default span
             self.n = n
         self.k = k
         if b is None:
@@ -46,20 +45,18 @@ class PageList:
         self.booklets = ceil((self.n+self.b)/self.k/4)
         self.N = self.booklets*4*self.k
         self.pages = [-1]*self.b + \
-            [*range(self.span[0], self.span[1]+1)] + \
+            [*range(self.span.start, self.span.end+1)] + \
             [-1]*(4*self.k*self.booklets-self.n)
         self.blank = self.b + 4*self.k*self.booklets - self.n
 
-    def order(self) -> list:
-        """Order indices for a booklet with 4*self.k pages."""
-        l = [*range(1, 4*self.k+1)]
-        l = [l.pop(i % 4//2-1)-1 for i in l*1]
+    def order(self) -> List[int]:
+        """Order indices for a booklet with 4*self.k pages"""
         result = []
         for i in range(self.booklets):
-            result += [4*self.k*i + j for j in l]
+            result += [4*self.k*i + j for j in booklet_order(self.k)]
         return result
 
-    def ordered_pages(self) -> list:
+    def ordered_pages(self) -> List[int]:
         """List page numbers in booklet order. Empty pages are represented with -1."""
         return [self.pages[i] for i in self.order()]
 

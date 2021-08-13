@@ -1,9 +1,11 @@
-from . import Doc, PageList
-import argparse, gettext
-_ = gettext.gettext
+from gettext import gettext as _
+import argparse
 
-from typing import Tuple
 from PyPDF2.utils import PdfReadError
+
+from .doc import Doc
+from .pagelist import PageList
+from .span import Span
 
 
 def choose_k(n:int) -> int:
@@ -25,10 +27,10 @@ def str2doc(path:str) -> Doc:
         raise argparse.ArgumentTypeError(f'_("Error reading file"): {err}')
 
 
-def str2span(strspan:str) -> Tuple[int, int]:
+def str2span(strspan:str) -> Span:
     try:
         span = strspan.split("-")
-        return (int(span[0]), int(span[1]))
+        return Span(int(span[0]), int(span[1]))
     except IndexError as e:
         raise ValueError(f'{_("Invalid span")} ({e})')
 
