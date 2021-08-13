@@ -6,7 +6,7 @@ buildPythonPackage rec {
 
   src = ./.;
 
-  propagatedBuildInputs = [ pypdf2 ];
+  propagatedBuildInputs = [ pypdf2 docopt ];
 
   checkInputs = [ pytest ];
   checkPhase = "pytest";

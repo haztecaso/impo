@@ -1,15 +1,27 @@
-from gettext import gettext as _
-import argparse
+"""
+Usage:
+  impo [options] <input_file> [<output_file>]
 
-from PyPDF2.utils import PdfReadError
+Options:
+  -h --help       Show this screen.
+  --version       Show version.
+  -s, --span int  Span of pages to include [default: all]
+  -k int          Number of pages per booklet
+  -b int          Number of blank pages to insert before document [default: 0]
+  -v              Verbose mode
+"""
+
+from gettext import gettext as _
+
+from docopt import docopt
 
 from .doc import Doc
 from .pagelist import PageList
-from .span import Span
+from .span import str2span
 
 
 def choose_k(n:int) -> int:
-    for k in range(1, 9):
+    for k in range(1, min(n // 4, 9)):
         pl = PageList(n, k)
         s = "[%d] %d " % (k, pl.booklets)
         s += _("booklets of") + " %d " % k + _("pages each")
@@ -19,49 +31,25 @@ def choose_k(n:int) -> int:
     return k
 
 
-def str2doc(path:str) -> Doc:
-    try:
-        doc = Doc(path)
-        return doc
-    except PdfReadError as err:
-        raise argparse.ArgumentTypeError(f'_("Error reading file"): {err}')
-
-
-def str2span(strspan:str) -> Span:
-    try:
-        span = strspan.split("-")
-        return Span(int(span[0]), int(span[1]))
-    except IndexError as e:
-        raise ValueError(f'{_("Invalid span")} ({e})')
-
 def main():
-    import argparse
-    parser = argparse.ArgumentParser(description=_(
-        "impo is a program for impositioning documents"))
-    parser.add_argument("input", metavar="in.pdf",
-                        help=_("input file"), type=str2doc)
-    parser.add_argument("output", nargs="?", metavar="out.pdf",
-                        help=_("output file"), type=str)
-    parser.add_argument("-k", metavar="n",
-                        help=_("pages per booklet"), type=int)
-    parser.add_argument("-s", metavar="span",
-                        help=_("span of pages to include"), type=str2span)
-    parser.add_argument(
-        "-b", metavar="n", help=_("blank pages to insert before document"), type=int)
-    parser.add_argument("-v", help=_("verbosity"), action="store_true")
-    args = parser.parse_args()
-    doc = args.input
-    n = doc.n
-    if args.k is not None:
-        k = args.k
-        if k < 1 or k > n // 4:
+    args = docopt(__doc__, version="impo v2.1.0")
+    print(args)
+    return
+    doc = Doc(args['<input_file>'])
+    if args['-k'] is not None:
+        args['-k'] = int(args['-k'])
+        if args['-k'] < 1 or args['-k'] > doc.n // 4:
             raise ValueError(_("Invalid k"))
     else:
-        k = choose_k(n)
-    pl = PageList(n, k, args.b, args.s)
+        args['-k'] = choose_k(doc.n)
+    args['--span'] = None if args['--span'] == "all" else str2span(args['--span'])
+    args['-b'] = int(args['-b'])
+
+    pl = PageList(doc.n, args['-k'], args['-b'], args['--span'])
     print(doc, pl)
-    print(f"Saving output file to {doc.output_file()}")
-    doc.save(pl, args.output)
+    print(f"Saving output file to {doc.output_file(pl)}")
+
+    doc.save(pl, args['<output_file>'])
     print("Done!")
 
 if __name__ == "__main__":

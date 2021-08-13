@@ -7,6 +7,7 @@ pkgs.mkShell {
   nativeBuildInputs = with pkgs.python38Packages; [
     impo
     pypdf2
+    docopt
     pytest
   ];
   shellHook = ''

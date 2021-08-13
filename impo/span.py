@@ -27,3 +27,7 @@ class Span:
         if self.end > n:
             raise InvalidSpan(_("The end value must be less or equal than the number of pages"))
         return True
+
+def str2span(strspan:str) -> Span:
+    start, end = strspan.split("-")
+    return Span(int(start), int(end))
