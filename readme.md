@@ -7,7 +7,7 @@ Install
 ### Install requirements
 
 ```
-pip install PyPDF2
+pip install PyPDF2 docopt
 ```
 
 ### Install impo
