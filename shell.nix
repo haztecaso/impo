@@ -4,8 +4,13 @@ let
   impo = import ./default.nix { inherit pkgs lib; };
 in
 pkgs.mkShell {
-  nativeBuildInputs = [ impo pkgs.python38Packages.pypdf2 ];
+  nativeBuildInputs = with pkgs.python38Packages; [
+    impo
+    pypdf2
+    pytest
+  ];
   shellHook = ''
     alias impo="python -m impo"
+    alias pytest="python -m pytest"
   '';
 }

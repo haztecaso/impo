@@ -8,6 +8,9 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [ pypdf2 ];
 
+  checkInputs = [ pytest ];
+  checkPhase = "pytest";
+
   meta = with lib; {
     homepage = "https://github.com/haztecaso/impo";
     description = "Impo is a program for impositioning documents";
