@@ -58,7 +58,7 @@ def main():
         k = choose_k(n)
     pl = PageList(n, k, args.b, args.s)
     print(doc, pl)
-    print(f"Saving output file to {args.output}")
+    print(f"Saving output file to {doc.output_file()}")
     doc.save(pl, args.output)
     print("Done!")
 
