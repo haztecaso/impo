@@ -40,12 +40,17 @@ class Doc:
                 pdf_writer.addPage(page)
         return pdf_writer
 
-    def save(self, pl:PageList, out_path:str=None) -> None:
+    def output_file(self, pl:PageList, filename:str=None) -> str:
+        """Generates output filename"""
+        if not filename:
+            filename = f"{self.name}-impo-k{pl.k}.pdf"
+        return filename
+
+    def save(self, pl:PageList, output_path:str=None) -> None:
         """Generates and saves new output_pdf given PageList object"""
         pdf_writer = self.arrange(pl)
-        if not out_path:
-            out_path = f"{self.name}-impo-k{pl.k}.pdf"
-        outf = open(out_path, "wb+")
+        output_path = self.output_file(pl, output_path)
+        outf = open(output_path, "wb+")
         pdf_writer.write(outf)
 
     def __str__(self):
