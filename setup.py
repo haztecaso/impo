@@ -2,8 +2,8 @@
 
 import setuptools
 
-with open("readme.md", "r") as readme_file:
-    long_description = readme_file.read()
+with open("readme.md", "r") as fh:
+    long_description = fh.read()
 
 setuptools.setup(
     name="impo-haztecaso", # Replace with your own username
