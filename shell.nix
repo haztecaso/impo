@@ -1,8 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
-let
-  inherit (pkgs) lib;
-  impo = import ./default.nix { inherit pkgs lib; };
-in
+{ pkgs, impo }:
 pkgs.mkShell {
   nativeBuildInputs = with pkgs.python38Packages; [
     impo

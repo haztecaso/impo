@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs }:
 with pkgs.python38Packages;
 buildPythonPackage rec {
   pname = "impo";
@@ -11,10 +11,9 @@ buildPythonPackage rec {
   checkInputs = [ pytest ];
   checkPhase = "pytest";
 
-  meta = with lib; {
+  meta = {
     homepage = "https://github.com/haztecaso/impo";
     description = "Impo is a program for impositioning documents";
-    license = licenses.gpl3;
+    license = pkgs.lib.licenses.gpl3;
   };
 }
-
