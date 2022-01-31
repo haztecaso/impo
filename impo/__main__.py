@@ -36,8 +36,8 @@ def main():
     doc = Doc(args['<input_file>'])
     if args['-k'] is not None:
         args['-k'] = int(args['-k'])
-        if args['-k'] < 1 or args['-k'] > doc.n // 4:
-            raise ValueError(_("Invalid k"))
+        # if args['-k'] < 1 or args['-k'] > doc.n // 4:
+            # raise ValueError(_("Invalid k"))
     else:
         args['-k'] = choose_k(doc.n)
     args['--span'] = None if args['--span'] == "all" else str2span(args['--span'])

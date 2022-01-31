@@ -4,10 +4,11 @@ Impo is a program for [impositioning](https://en.wikipedia.org/wiki/Imposition) 
 
 Install
 -------
+
 ### Install requirements
 
 ```
-pip install PyPDF2
+pip install PyPDF2 docopt
 ```
 
 ### Install impo
