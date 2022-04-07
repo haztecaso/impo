@@ -15,6 +15,9 @@
         };
         defaultPackage = packages.impo;
         devShell = import ./shell.nix { inherit pkgs; impo = packages.impo; };
+        overlay = final: prev: {
+          impo = self.defaultPackage;
+        };
       }
     );
 }
